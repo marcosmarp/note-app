@@ -11,11 +11,13 @@
 
 int main() {
   MainMenuOptions user_option;
+  std::vector<NotesData> notes_vector;
 
+  LoadSavedNotes(notes_vector);
   PrintMainMenuHighlighted(MainMenuOptions::kNewNote);
   user_option = ScrollMainMenu();
   _getch();
-  
+  return 0;
 }
 
 MainMenuOptions ScrollMainMenu() {
@@ -99,6 +101,24 @@ MainMenuOptions ScrollMainMenu() {
       }
     }
   }
+}
+
+void LoadSavedNotes(std::vector<NotesData>& notes_vector) {
+  std::ifstream notes_txt;
+  std::string line_temporal;
+  NotesData notes_temporal;
+
+  notes_txt.open("notes.txt");
+  for(auto i = 0; notes_txt.eof() == false ; ++i) {
+    getline(notes_txt, line_temporal);
+    if(notes_txt.eof() == true) break;
+    notes_temporal.title = line_temporal;
+    getline(notes_txt, line_temporal);
+    notes_temporal.content = line_temporal;
+    notes_vector.push_back(notes_temporal);
+  }
+  notes_txt.close();
+  return;
 }
 
 void PrintMainMenuHighlighted(MainMenuOptions highlighted_option) {
