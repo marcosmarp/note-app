@@ -32,6 +32,7 @@ void LoadSavedNotes(std::vector<NotesData>&); // Updates the vector with the sav
 void NewNote(std::vector<NotesData>&); // Uploads new note to the vector
 bool DisplayNotes(std::vector<NotesData>&, bool calling_from_main); // Displays in console the stored notes
 void EditNote(std::vector<NotesData>&); // Lets the user edit the content of a note or even the title
+void DeleteNote(std::vector<NotesData>&); // Lets the user delete a note
 void EditTitle(std::string&, std::string&); // Replaces the title of a note with a new one
 void EditContent(std::string&, const std::string); // Replaces the content of a note with a new one
 void PrintNotesInTxt(const std::vector<NotesData>&); // Replaces the existing txt file with a new one with updated content and titles
