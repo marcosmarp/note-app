@@ -14,14 +14,25 @@ int main() {
   std::vector<NotesData> notes_vector;
 
   LoadSavedNotes(notes_vector);
-  PrintMainMenuHighlighted(MainMenuOptions::kNewNote);
-  user_option = ScrollMainMenu();
+  while (user_option != MainMenuOptions::kExit) {
+    user_option = ScrollMainMenu();
+    switch (user_option) {
+      case MainMenuOptions::kNewNote: {
+        NewNote(notes_vector);
+        break;
+      }
+      case MainMenuOptions::kExit: {
+        break;
+      }
+    }
+  }
   _getch();
   return 0;
 }
 
 MainMenuOptions ScrollMainMenu() {
   MainMenuOptions last_item_scrolled = MainMenuOptions::kNewNote;
+  PrintMainMenuHighlighted(MainMenuOptions::kNewNote);
 
   while(true) {
     /* Here we have two switch statements, with two more inside them: basically, the current position of the user in the main menu (first switch with 4 options)
@@ -109,7 +120,7 @@ void LoadSavedNotes(std::vector<NotesData>& notes_vector) {
   NotesData notes_temporal;
 
   notes_txt.open("notes.txt");
-  for(auto i = 0; notes_txt.eof() == false ; ++i) {
+  while(notes_txt.eof() == false){
     getline(notes_txt, line_temporal);
     if(notes_txt.eof() == true) break;
     notes_temporal.title = line_temporal;
@@ -152,6 +163,36 @@ void PrintMainMenuHighlighted(MainMenuOptions highlighted_option) {
       std::cout << "[Exit]" << std::endl << std::endl;
       break;
     }
+  }
+  return;
+}
+
+void NewNote(std::vector<NotesData>& stored_notes) {
+  ClearScreen();
+  std::cout << "NEW NOTE" << std::endl << std::endl;
+
+  NotesData new_note_temporal;
+  std::cout << "Title: ";
+  getline(std::cin, new_note_temporal.title);
+  std::cout << std::endl;
+  std::cout << "Content:";
+  getline(std::cin, new_note_temporal.content);
+  std::cout << std::endl << std::endl;
+  stored_notes.push_back(new_note_temporal);
+
+  std::ofstream notes_txt;
+  notes_txt.open("notes.txt", std::ios::app);
+  notes_txt << new_note_temporal.title << std::endl;
+  notes_txt << new_note_temporal.content << std::endl;
+  std::cout << "SUCCESFULLY UPLOADED NEW NOTE, RETURNING TO MAIN MENU";
+  PrintDotsWithDelay(5, 500);
+  return;
+  }
+
+void PrintDotsWithDelay(int amount_of_dots, int delay) {
+  for(auto i = 0 ; i < amount_of_dots ; ++i) {
+    std::cout << ".";
+    Sleep(delay);
   }
   return;
 }
