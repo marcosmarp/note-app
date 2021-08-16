@@ -144,11 +144,12 @@ MainMenuOptions ScrollMainMenu() {
 }
 
 void LoadSavedNotes(std::vector<NotesData>& notes_vector) {
-  std::ifstream notes_txt;
+  std::fstream notes_txt;
   std::string line_temporal;
   NotesData notes_temporal;
 
-  notes_txt.open("notes.txt");
+  
+  notes_txt.open("notes.txt", std::fstream::in | std::fstream::out | std::fstream::app);
   while(notes_txt.eof() == false){
     getline(notes_txt, line_temporal);
     if(notes_txt.eof() == true) break;
