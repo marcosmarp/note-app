@@ -12,6 +12,8 @@ enum class MainMenuOptions {kNewNote, kEditNote, kDeleteNote, kExit, kInvalid};
 
 MainMenuOptions ScrollMainMenu(); // Infite loop that keeps asking the user for an arrok key to scroll though the menu or an enter to go the selected option
 void PrintMainMenuHighlighted(MainMenuOptions); // Prints the main menu with the specified option highlighted
+void PrintDotsWithDelay(int, int); // Prints the specified amount of dots with the specified delay
 void ClearScreen(); // Clears the console output
-void LoadSavedNotes(std::vector<NotesData>&); // Uploads in the vector with the saved notes
+void LoadSavedNotes(std::vector<NotesData>&); // Updates the vector with the saved txt notes
+void NewNote(std::vector<NotesData>&); // Uploads new note to the vector
 
