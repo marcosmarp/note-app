@@ -21,12 +21,15 @@ int main() {
         NewNote(notes_vector);
         break;
       }
+      case MainMenuOptions::kDisplayNotes: {
+        DisplayNotes(notes_vector);
+        break;
+      }
       case MainMenuOptions::kExit: {
         break;
       }
     }
   }
-  _getch();
   return 0;
 }
 
@@ -46,6 +49,24 @@ MainMenuOptions ScrollMainMenu() {
             break;
           }
           case ARROW_DOWN: {
+            PrintMainMenuHighlighted(MainMenuOptions::kDisplayNotes);
+            last_item_scrolled = MainMenuOptions::kDisplayNotes;
+            break;
+          }
+          case ENTER_KEY: {
+            return last_item_scrolled;
+          }
+        }
+        break;
+      }
+      case MainMenuOptions::kDisplayNotes: {
+        switch(_getch()) {
+          case ARROW_UP: {
+            PrintMainMenuHighlighted(MainMenuOptions::kNewNote);
+            last_item_scrolled = MainMenuOptions::kNewNote;
+            break;
+          }
+          case ARROW_DOWN: {
             PrintMainMenuHighlighted(MainMenuOptions::kEditNote);
             last_item_scrolled = MainMenuOptions::kEditNote;
             break;
@@ -59,8 +80,8 @@ MainMenuOptions ScrollMainMenu() {
       case MainMenuOptions::kEditNote: {
         switch(_getch()) {
           case ARROW_UP: {
-            PrintMainMenuHighlighted(MainMenuOptions::kNewNote);
-            last_item_scrolled = MainMenuOptions::kNewNote;
+            PrintMainMenuHighlighted(MainMenuOptions::kDisplayNotes);
+            last_item_scrolled = MainMenuOptions::kDisplayNotes;
             break;
           }
           case ARROW_DOWN: {
@@ -137,6 +158,15 @@ void PrintMainMenuHighlighted(MainMenuOptions highlighted_option) {
   switch(highlighted_option) {
     case MainMenuOptions::kNewNote: {
       std::cout << "[New note]" << std::endl << std::endl;
+      std::cout << "Display notes" << std::endl << std::endl;
+      std::cout << "Edit note" << std::endl << std::endl;
+      std::cout << "Delete note" << std::endl << std::endl;
+      std::cout << "Exit" << std::endl << std::endl;
+      break;
+    }
+    case MainMenuOptions::kDisplayNotes: {
+      std::cout << "New note" << std::endl << std::endl;
+      std::cout << "[Display notes]" << std::endl << std::endl;
       std::cout << "Edit note" << std::endl << std::endl;
       std::cout << "Delete note" << std::endl << std::endl;
       std::cout << "Exit" << std::endl << std::endl;
@@ -144,6 +174,7 @@ void PrintMainMenuHighlighted(MainMenuOptions highlighted_option) {
     }
     case MainMenuOptions::kEditNote: {
       std::cout << "New note" << std::endl << std::endl;
+      std::cout << "Display notes" << std::endl << std::endl;
       std::cout << "[Edit note]" << std::endl << std::endl;
       std::cout << "Delete note" << std::endl << std::endl;
       std::cout << "Exit" << std::endl << std::endl;
@@ -151,6 +182,7 @@ void PrintMainMenuHighlighted(MainMenuOptions highlighted_option) {
     }
     case MainMenuOptions::kDeleteNote: {
       std::cout << "New note" << std::endl << std::endl;
+      std::cout << "Display notes" << std::endl << std::endl;
       std::cout << "Edit note" << std::endl << std::endl;
       std::cout << "[Delete note]" << std::endl << std::endl;
       std::cout << "Exit" << std::endl << std::endl;
@@ -158,6 +190,7 @@ void PrintMainMenuHighlighted(MainMenuOptions highlighted_option) {
     }
     case MainMenuOptions::kExit: {
       std::cout << "New note" << std::endl << std::endl;
+      std::cout << "Display notes" << std::endl << std::endl;
       std::cout << "Edit note" << std::endl << std::endl;
       std::cout << "Delete note" << std::endl << std::endl;
       std::cout << "[Exit]" << std::endl << std::endl;
@@ -175,7 +208,7 @@ void NewNote(std::vector<NotesData>& stored_notes) {
   std::cout << "Title: ";
   getline(std::cin, new_note_temporal.title);
   std::cout << std::endl;
-  std::cout << "Content:";
+  std::cout << "Content: ";
   getline(std::cin, new_note_temporal.content);
   std::cout << std::endl << std::endl;
   stored_notes.push_back(new_note_temporal);
@@ -187,7 +220,19 @@ void NewNote(std::vector<NotesData>& stored_notes) {
   std::cout << "SUCCESFULLY UPLOADED NEW NOTE, RETURNING TO MAIN MENU";
   PrintDotsWithDelay(5, 500);
   return;
+}
+
+void DisplayNotes(std::vector<NotesData>& stored_notes) {
+  ClearScreen();
+  std::cout << "STORED NOTES" << std::endl << std::endl;
+  for(auto& it : stored_notes) {
+    std::cout << "  Title: " << it.title << std::endl;
+    std::cout << "  Content: " << it.content << std::endl << std::endl;
   }
+  std::cout << "Press any key to return to main menu";
+  _getch();
+  return;
+}
 
 void PrintDotsWithDelay(int amount_of_dots, int delay) {
   for(auto i = 0 ; i < amount_of_dots ; ++i) {
