@@ -29,6 +29,10 @@ int main() {
         EditNote(notes_vector);
         break;
       }
+      case MainMenuOptions::kDeleteNote: {
+        DeleteNote(notes_vector);
+        break;
+      }
       case MainMenuOptions::kExit: {
         break;
       }
@@ -273,15 +277,16 @@ void EditNote(std::vector<NotesData>& stored_notes) {
     switch(user_option) {
       case EditOptions::kEditTitle: {
         EditTitle(note_to_edit->title, title_to_edit);
+        PrintNotesInTxt(stored_notes);
         break;
       }
       case EditOptions::kEditContent: {
         EditContent(note_to_edit->content, title_to_edit);
+        PrintNotesInTxt(stored_notes);
         break;
       }
     }
   }
-  PrintNotesInTxt(stored_notes);
   return;
 }
 
@@ -312,6 +317,43 @@ void EditContent(std::string& content, const std::string title) {
   std::cout <<"Enter new content: ";
   getline(std::cin, content);
   std::cout << std::endl;
+  return;
+}
+
+void DeleteNote(std::vector<NotesData>& notes) {
+  ClearScreen();
+  std::cout << "THIS ARE YOUR ";
+  if(DisplayNotes(notes, false) == false) {
+    return;
+  }
+  std::string title_to_delete;
+  auto note_to_delete = notes.end();
+  std::string choice_temporal{"no"};
+  while (choice_temporal == "no") {
+    note_to_delete = notes.end();
+    while(note_to_delete == notes.end()) {
+        std::cout << "Enter the title of the note to delete [tipe 'exit' to return to main menu]: ";
+        getline(std::cin, title_to_delete);
+        std::cout << std::endl;
+        if(title_to_delete == "exit") return;
+        note_to_delete = SearchForNoteByTitle(title_to_delete, notes);
+        if(note_to_delete == notes.end()) std::cout << "Inexistent title, try again. ";
+    }
+    std::cout << "YOU'RE GOING TO DELETE '" << title_to_delete << "' Are you sure?" << std::endl << std::endl;
+    std::cout << "Type yes or no: ";
+    getline(std::cin, choice_temporal);
+    std::cout << std::endl;
+    while(choice_temporal != "yes" && choice_temporal != "no" && choice_temporal != "y" && choice_temporal != "n") {
+      std::cout << "Invalid input, try again: ";
+      getline(std::cin, choice_temporal);
+      std::cout << std::endl;
+    }
+  }
+  notes.erase(note_to_delete);
+  PrintNotesInTxt(notes);
+
+  std::cout << "NOTE DELETED SUCCESFULLY, RETURNING TO MAIN MENU";
+  PrintDotsWithDelay(5, 500);
   return;
 }
 
